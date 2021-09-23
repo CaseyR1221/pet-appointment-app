@@ -7,6 +7,25 @@ import { BiCalendar, BiTrash } from "react-icons/bi";
 function App() {
 
   const [appointmentList, setAppointmentList] = useState([]);
+  const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState("petName");
+  const [orderBy, setOrdertBy] = useState("asc");
+
+
+  const filteredAppointments = appointmentList.filter(
+    item => {
+      return (
+        item.petName.toLowerCase().includes(query.toLowerCase()) ||
+        item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
+        item.aptNotes.toLowerCase().includes(query.toLowerCase())
+      )
+    }
+  ).sort((a, b) => {
+    let order = (orderBy === "asc") ? 1 : -1;
+    return (
+      a[sortBy].toLowerCase() < b[sortBy].toLowerCase() ? -1 * order : 1 * order
+    )
+  })
 
   const fetchData = useCallback(() => {
     fetch('./data.json')
@@ -27,13 +46,23 @@ function App() {
         Your Appointments
       </h1>
       <AddAppointment />
-      <Search />
+      <Search 
+        query={query}
+        onQueryChange={myQuery => {
+          setQuery(myQuery)
+        }}
+      />
 
       <ul className="divide-y divide-gray-200">
-        {appointmentList.map((appointment) => (
+        {filteredAppointments.map((appointment) => (
           <AppointmentInfo 
             key={appointment.id}
             appointment={appointment}
+            onDeleteAppointment={
+              appointmentId => {
+                setAppointmentList(appointmentList.filter(appointment => appointment.id !== appointmentId))
+              }
+            }
           />
         ))}
       </ul>
