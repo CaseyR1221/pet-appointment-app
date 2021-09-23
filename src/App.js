@@ -9,7 +9,7 @@ function App() {
   const [appointmentList, setAppointmentList] = useState([]);
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("petName");
-  const [orderBy, setOrdertBy] = useState("asc");
+  const [orderBy, setOrderBy] = useState("asc");
 
 
   const filteredAppointments = appointmentList.filter(
@@ -21,9 +21,10 @@ function App() {
       )
     }
   ).sort((a, b) => {
-    let order = (orderBy === "asc") ? 1 : -1;
+    let order = (orderBy === 'asc') ? 1 : -1;
     return (
-      a[sortBy].toLowerCase() < b[sortBy].toLowerCase() ? -1 * order : 1 * order
+      a[sortBy].toLowerCase() < b[sortBy].toLowerCase()
+        ? -1 * order : 1 * order
     )
   })
 
@@ -50,6 +51,14 @@ function App() {
         query={query}
         onQueryChange={myQuery => {
           setQuery(myQuery)
+        }}
+        orderBy={orderBy}
+        onOrderByChange={mySort => {
+          setOrderBy(mySort)
+        }}
+        sortBy={sortBy}
+        onSortByChange={mySort => {
+          setSortBy(mySort)
         }}
       />
 
